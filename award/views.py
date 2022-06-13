@@ -9,6 +9,14 @@ from .forms import RegisterForm, LoginForm
 def index(request):
     return render(request, 'users/index.html')
 
+def dispatch(self, request, *args, **kwargs):
+        # will redirect to the home page if a user tries to access the register page while logged in
+        if request.user.is_authenticated:
+            return redirect(to='/')
+
+        # else process dispatch as it otherwise normally would
+        return super(RegisterView, self).dispatch(request, *args, **kwargs)
+
 class RegisterView(View):
     form_class = RegisterForm
     initial = {'key': 'value'}
