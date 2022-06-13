@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect 
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
 
@@ -67,3 +68,8 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('index')
+
+
+@login_required
+def profile(request):
+    return render(request, 'users/profile.html')
