@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from award.views import CustomLoginView  
 from award.forms import LoginForm
+from django.conf.urls import url
 
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', CustomLoginView.as_view(redirect_authenticated_user=True, template_name='users/login.html',authentication_form=LoginForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
