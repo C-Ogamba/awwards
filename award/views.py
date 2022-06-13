@@ -5,7 +5,8 @@ from django.views import View
 from .forms import RegisterForm
 
 # Create your views here.
-
+def index(request):
+    return render(request, 'users/index.html')
 
 class RegisterView(View):
     form_class = RegisterForm
