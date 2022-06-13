@@ -136,6 +136,12 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
+
+
+# social auth configs for github
+SOCIAL_AUTH_GITHUB_KEY = 'YOUR GITHUB KEY'
+SOCIAL_AUTH_GITHUB_SECRET = 'YOUR GITHUB SECRET KEY'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
