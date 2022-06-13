@@ -18,6 +18,8 @@ from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views
 from award.views import CustomLoginView, ResetPasswordView  
 from award.forms import LoginForm
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 
@@ -28,4 +30,4 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     re_path(r'^oauth/', include('social_django.urls', namespace='social')),
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
