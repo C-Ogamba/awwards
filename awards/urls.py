@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('award/', include('award.urls')),
+    path('', include('award.urls')),
     path('admin/', admin.site.urls),
 ]
