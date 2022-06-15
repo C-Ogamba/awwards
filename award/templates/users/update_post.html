@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block title %}
+    Edit post 
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+ {% if user.id == post.author.id %}
+ <div class="my-3 p-3">
+    <h1>Update Post</h1>
+    <br/><br/>
+    <div class="form-group">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-secondary">Update</button>
+
+        </form>
+    </div>
+    </div>
+    {% else %}
+        Login to continue
+    {% endif %}
+
+    {% else %}
+        Login to continue
+    {% endif %}
+   
+{% endblock %}
