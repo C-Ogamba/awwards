@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.urls import reverse
+from django.db.models.signals import post_save
 
 # Create your models here.
 class Profile(models.Model):
@@ -22,24 +24,36 @@ class Profile(models.Model):
             img.thumbnail(new_img)
             img.save(self.avatar.path)
 
-class Project(models.Model):
+# class Category(models.Model):
+#     name =models.CharField(max_length=255)
+
+
+#     def __str__(self):
+#         return self.name 
+
+#     def get_absolute_url(self):
+#         return reverse('home')
+        # return reverse('article-detail', args=(str(self.id)))
+
+class Post(models.Model):
     title = models.CharField(max_length=255)
+    title_tag = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     body = models.TextField()
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default='coding')
-    image = models.ImageField('image',null=True)
-    votes = models.ManyToManyField(User, related_name='blog_posts')
+    image = models.ImageField(default='default.jpg', upload_to='images')
+    likes = models.ManyToManyField(User, related_name='blog_posts')
     
     def total_likes(self):
-        return self.votes.count()
+        return self.likes.count()
 
 
     def __str__(self):
         return self.title + '|' + str(self.author)
 
     def get_absolute_url(self):
-        return reverse('index')
+        return reverse('home')
         # return reverse('article-detail', args=(str(self.id)))
 
     def save_post(self):
@@ -47,6 +61,7 @@ class Project(models.Model):
 
     def update_caption(self, body):
         return self.body.update()
+        
 
     def delete_post(self):
         return self.delete()
