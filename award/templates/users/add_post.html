@@ -1,0 +1,28 @@
+{% extends 'users/base.html' %}
+{% block title %}
+    Create a new post 
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="my-3 p-3">
+    <h1>Add Post</h1>
+    <br/><br/>
+    <div class="form-group">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-secondary">Post</button>
+
+        </form>
+    </div>
+    <script>
+        let name = "{{ user.id }}";
+        document.getElementById("elder").value= name;
+    </script>
+    </div>
+{% else %}
+    Login to continue
+{% endif %}
+   
+{% endblock %}
