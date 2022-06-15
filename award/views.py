@@ -2,11 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.views import LoginView
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.http import HttpResponseRedirect
-from award.models import Projects
+from .models import Post, Profile
+from .forms import PostForm, EditForm
 from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
 from django.urls import reverse_lazy,reverse
 from django.contrib.auth.views import PasswordResetView, PasswordChangeView
@@ -75,78 +75,81 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 @login_required
 def profile(request):
+    # project_form = ProjectForm()
+    current_user = request.user
+    profile = Profile.objects.filter(user = current_user.pk).first()
+    # projects = Project.objects.filter(profile = profile).all()
+
+    return render (request, 'users/profile.html', {"profile":profile, "current_user":current_user})
+
+def update_profile(request):
+    current_user = request.user
     if request.method == 'POST':
-        # profile = UserProfile.objects.create(user=request.user)
-        user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            profile = form.save(commit = False)
+            profile.save()
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')
-            return redirect(to='users-profile')
+        return redirect("profile", id = current_user.id )   
+
     else:
-        user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        form = UpdateProfileForm()  
 
-    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'users/update_profile.html', {"current_user":current_user , "form":form})
+
+    # if request.method == 'POST':
+    #     # profile = UserProfile.objects.create(user=request.user)
+    #     user_form = UpdateUserForm(request.POST, instance=request.user)
+    #     profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.Profile.user)
+
+    #     if user_form.is_valid() and profile_form.is_valid():
+    #         user_form.save()
+    #         profile_form.save()
+    #         messages.success(request, 'Your profile is updated successfully')
+    #         return redirect(to='users-profile')
+    # else:
+    #     user_form = UpdateUserForm(instance=request.user)
+    #     profile_form = UpdateProfileForm(instance=request.Profile.user)
+
+    # return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_message = "Successfully Changed Your Password"
     success_url = reverse_lazy('index')
 
-def Search(request):
-    if request.method == "POST":
-        searched = request.POST['searched']
-        projects = Projects.objects.filter(title__icontains=searched)
-        return render(request, 'search.html', {'searched':searched, 'posts': posts})
 
-    else:
-        return render(request, 'search.html', {})
+class ArticleDetailView(DetailView):
+    model = Post
+    template_name = 'article_details.html'
 
-class HomeView(ListView):
-    model = Projects
-    # template_name = 'index.html'
-    # ordering = ['-post_date']
-    def get(self, request):
-        posts = Projects.objects.order_by('-post_date')[:20]
-        ctx = {
-            'object_list': posts
-        }
-        return render(request, 'index.html', ctx)
+    def get_context_data(self, *args, **kwargs):
+        context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
+        stuff = get_object_or_404(Post, id=self.kwargs['pk'])
+        total_likes = stuff.total_likes()
 
-def CategoryView(request, cats):
-    category_posts = Projects.objects.filter(category=cats)
-    return render(request, 'categories.html', {'cats':cats.title(),'category_posts':category_posts })
-
-def LikeView(request,pk):
-    post =  get_object_or_404(Projects, id=request.POST.get('post_id'))
-    liked = False
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
         liked = False
-    else:
-        post.likes.add(request.user)
-        liked = True
-    
-    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+        if stuff.likes.filter(id=self.request.user.id).exists():
+            liked = True
 
+        context["total_likes"] = total_likes
+        context["liked"] = liked
+        return context
 
 
 class AddPostView(CreateView):
     model = Post
     form_class = PostForm
-    template_name = 'add_post.html'
+    template_name = 'users/add_post.html'
     # fields = '__all__'
     # fields = ('title', 'body')
 
-class AddCategoryView(CreateView):
-    model = Category
-    # form_class = PostForm
-    template_name = 'add_category.html'
-    fields = '__all__'
-    # fields = ('title', 'body')
+# class AddCategoryView(CreateView):
+#     model = Category
+#     # form_class = PostForm
+#     template_name = 'add_category.html'
+#     fields = '__all__'
+#     # fields = ('title', 'body')
 
 class UpdatePostView(UpdateView):
     model = Post
@@ -158,3 +161,12 @@ class DeletePostView(DeleteView):
     model = Post
     template_name = 'delete_post.html'
     success_url = reverse_lazy('home')
+
+def Search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        posts = Post.objects.filter(title__icontains=searched)
+        return render(request, 'users/search.html', {'searched':searched, 'posts': posts})
+
+    else:
+        return render(request, 'users/search.html', {}) 
