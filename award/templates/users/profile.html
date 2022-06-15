@@ -1,8 +1,9 @@
 {% extends "users/base.html" %}
+ {% load static %}
 {% block title %}Profile Page{% endblock title %}
 {% block content %}
-    <div class="row my-3 p-3">
-        <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
+    <!-- <div class="row my-3 p-3">
+        <img class="rounded-circle account-img" src="{{ profile.avatar.url }} " style="cursor: pointer;"/>
     </div>
     {% if user_form.errors %}
         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -40,5 +41,19 @@
             <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
             <button type="reset" class="btn btn-dark btn-lg">Reset</button>
         </form>
+    </div> -->
+
+
+    <div class="my-3 p-5">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <img style="border-radius: 60%; border:1px solid #ddd" src="{{ profile.avatar.url }}" alt="">
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <p>{{ profile.bio }}</p>
+                <br/><br/>
+                <button class="btn btn-outline-secondary"><a href="{% url 'update_profile' %}">update profile</a> </button>
+            </div>
+        </div>
     </div>
 {% endblock content %}
