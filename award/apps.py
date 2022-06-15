@@ -11,4 +11,4 @@ class UserConfig(AppConfig):
 
     # add this
     def ready(self):
-        import signals  # noqa
+        import users.signals  # noqa
