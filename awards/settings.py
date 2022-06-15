@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'award',
     'social_django',
+    'crispy_forms',
+
+    'rest_framework',
 ]
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -153,9 +160,7 @@ LOGIN_URL = 'login'
 SOCIAL_AUTH_GITHUB_KEY = '9215db427d1ebe008781'
 SOCIAL_AUTH_GITHUB_SECRET = '7f5d544c8d6dcff41ac6c8c6a5338676fca5a801'
 # SOCIAL_AUTH_GITHUB_SCOPE = [...]
-# social auth configs for google
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'YOUR GOOGLE KEY'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'YOUR GOOGLE SECRET KEY'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
