@@ -1,0 +1,24 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block title %}
+    Search  
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="my-3 p-3">
+        {% if searched %}
+            <h1>{{ searched }}</h1>
+            <br/>
+            {% for post in posts %}
+                {{ post }}
+            {% endfor %}
+        {% else %}
+            <h1>Nothing here...</h1>
+        {% endif %}
+    </div>
+    
+{% else %}
+    Login to continue
+{% endif %}
+   
+{% endblock %}
