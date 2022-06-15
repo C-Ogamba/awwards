@@ -2,6 +2,7 @@
  {% load static %}
 {% block title %} Home Page {% endblock title%}
 {% block content %}
+
     <div class="jumbotron jambo">
         <h1 class="display-4" style="font-family: 'Monoton', cursive; color: beige;">Welcome</h1>
         <p class="lead">
@@ -15,49 +16,21 @@
             <!-- <button type="submit"><i class="fa fa-search"></i></button> -->
         </form>
     </div>
-    <div class="row">
-    <div class="col-sm-8">  
-       
+<div class="row">
+    
     {% for post in object_list %}
-
-        <div class="card m-1" style="width: 20rem">
-                <div class="card-body">
-                    <img class="rounded-circle" src="{{ post.author.profile.profile_picture.url }}" alt="" height="60">
-                    <span><a href="{% url 'users:profile' post.author.id %}">{{ post.author }}</a></span>
-                </div>
+    <div class="col-md-4">  
+        
+          
+        <div class="card m-1" style="width: 15rem">
             {% if post.image %}
-            <img src="{{ post.image.url }}" alt="" />
+            <img src="{{ post.image.url }}" alt=""/>
             {% endif %}
             <div class="card-body">
-            <div class="row">
-                    <div class="col">
-                        <form action="{% url 'like_post' post.pk %}" method="POST">
-                                {% csrf_token %}
-                                {% if user.is_authenticated %}
-                                {% if liked %}
-                                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm" ><span class="iconify" data-icon="wpf:like"></span></button>
-                                {% else %}
-                                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm" ><span class="iconify" data-icon="wpf:like"></span></button>
-                                {% endif %}
-                                {% else %}
-                                <small> <a href="{% url 'login' %}">Login</a> Login to like </small>
-                                {% endif %}
-                                {{ total_likes }} likes
-                            </form>
-                            
-                        </div>
-                        <div class="col">
-                            <span class="iconify" data-icon="bx:dots-horizontal-rounded"></span>
-                        </div>
-                        <div class="col">
-                        <span class="iconify" data-icon="bi:bookmark"></span>
-                        </div>
-                    
-                    </div>
-                    <!-- <h5 class="card-title">
+                    <h5 class="card-title">
                     <a href="{% url 'article-detail' post.pk %}"> {{ post.title }} </a>
-                    </h5> -->
-                    <p class="card-text"><a href="{% url 'users:profile' post.author.id %}">{{ post.author }}</a>: {{ post.body|slice:":200" }}</p>
+                    </h5>
+                    <p class="card-text"><a href="{% url 'users-profile' %}">{{ post.author }}</a>: {{ post.body|slice:":200" }}</p>
                         <small>
                         {% if user.is_authenticated %} {% if user.id == post.author.id %}
                         <a href="{% url 'update_post' post.pk %}">Edit</a>
@@ -67,14 +40,16 @@
                     </small
                     ><br />
                     <div class="card-footer">
-
+                        <small><em>link: <a href="{{ post.link }}">here</a></em></small>
+<br>
                         <small><em>{{ post.post_date }}</em></small>
                     </div>
                 </div>
                 
         </div>
-        {% endfor %} 
+        
     </div>
+    {% endfor %} 
 </div>
 
 
