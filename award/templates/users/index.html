@@ -1,17 +1,81 @@
 {% extends "users/base.html" %}
+ {% load static %}
 {% block title %} Home Page {% endblock title%}
 {% block content %}
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome</h1>
+    <div class="jumbotron jambo">
+        <h1 class="display-4" style="font-family: 'Monoton', cursive; color: beige;">Welcome</h1>
         <p class="lead">
-            This is <b>user registration and login system</b> build with django which is
-            a Python-based free and open-source web framework that follows the model–template–views architectural pattern.
+            <em>Independent of the Year</em>
         </p>
         <hr class="my-4">
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Logout</a>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Sign in</a>
-        </p>
+         <form class="form-inline my-2 my-lg-0 topnav-centered" method=POST action="{% url 'search' %}">
+                {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+            <!-- <button type="submit"><i class="fa fa-search"></i></button> -->
+        </form>
     </div>
+    <div class="row">
+    <div class="col-sm-8">  
+       
+    {% for post in object_list %}
+
+        <div class="card m-1" style="width: 20rem">
+                <div class="card-body">
+                    <img class="rounded-circle" src="{{ post.author.profile.profile_picture.url }}" alt="" height="60">
+                    <span><a href="{% url 'users:profile' post.author.id %}">{{ post.author }}</a></span>
+                </div>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="" />
+            {% endif %}
+            <div class="card-body">
+            <div class="row">
+                    <div class="col">
+                        <form action="{% url 'like_post' post.pk %}" method="POST">
+                                {% csrf_token %}
+                                {% if user.is_authenticated %}
+                                {% if liked %}
+                                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm" ><span class="iconify" data-icon="wpf:like"></span></button>
+                                {% else %}
+                                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm" ><span class="iconify" data-icon="wpf:like"></span></button>
+                                {% endif %}
+                                {% else %}
+                                <small> <a href="{% url 'login' %}">Login</a> Login to like </small>
+                                {% endif %}
+                                {{ total_likes }} likes
+                            </form>
+                            
+                        </div>
+                        <div class="col">
+                            <span class="iconify" data-icon="bx:dots-horizontal-rounded"></span>
+                        </div>
+                        <div class="col">
+                        <span class="iconify" data-icon="bi:bookmark"></span>
+                        </div>
+                    
+                    </div>
+                    <!-- <h5 class="card-title">
+                    <a href="{% url 'article-detail' post.pk %}"> {{ post.title }} </a>
+                    </h5> -->
+                    <p class="card-text"><a href="{% url 'users:profile' post.author.id %}">{{ post.author }}</a>: {{ post.body|slice:":200" }}</p>
+                        <small>
+                        {% if user.is_authenticated %} {% if user.id == post.author.id %}
+                        <a href="{% url 'update_post' post.pk %}">Edit</a>
+                        
+                        <a href="{% url 'delete_post' post.pk %}">Delete</a>
+                        {% endif %} {% endif %} 
+                    </small
+                    ><br />
+                    <div class="card-footer">
+
+                        <small><em>{{ post.post_date }}</em></small>
+                    </div>
+                </div>
+                
+        </div>
+        {% endfor %} 
+    </div>
+</div>
+
 
 {% endblock content %}
