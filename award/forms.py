@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
-from .models import Profile, Post
+from .models import Profile, Post, Rating
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder':'First Name', 'class':'form-control'}))
@@ -50,7 +50,7 @@ class UpdateProfileForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'title_tag', 'author', 'body', 'image')
+        fields = ('title', 'title_tag', 'author', 'body', 'image', 'link')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'title_tag': forms.TextInput(attrs={'class': 'form-control'}),
@@ -58,6 +58,7 @@ class PostForm(forms.ModelForm):
             # 'author': forms.Select(attrs={'class': 'form-control'}),
             # 'category': forms.Select(choices=choice_list, attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
+            'link': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
 class EditForm(forms.ModelForm):
@@ -70,3 +71,8 @@ class EditForm(forms.ModelForm):
             # 'author': forms.Select(attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+class RatingsForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['design', 'usability', 'content']
