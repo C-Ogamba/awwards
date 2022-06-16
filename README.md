@@ -1,8 +1,8 @@
-# Insta-App
-created by Cindy Kemunto on 06/06/2022
+# AWWARDS
+created by Cindy Kemunto on 16/06/2022
 
 ## Description
-This is an instagram clone where users follow each other and can see the images they post. One can like and comment on posted images
+The application will allow a user to post a project he/she has created and get it reviewed by his/her peers.
 
 ## Technologies Used
 The following technologies have been used on this project:
