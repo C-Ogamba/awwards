@@ -62,6 +62,7 @@ class PostForm(forms.ModelForm):
         }
 
 class EditForm(forms.ModelForm):
+    
     class Meta:
         model = Post
         fields = ('title', 'title_tag', 'body', 'image')
@@ -76,3 +77,4 @@ class RatingsForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ['design', 'usability', 'content']
+      

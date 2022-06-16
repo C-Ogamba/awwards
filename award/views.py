@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect 
+from django.shortcuts import render, redirect 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
-from django.views.generic import ListView,DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.views import LoginView
 from .models import Post, Profile, Rating
@@ -137,6 +137,7 @@ def project(request, post):
         rating_status = True
     if request.method == 'POST':
         form = RatingsForm(request.POST)
+        user = request.user
         if form.is_valid():
             rate = form.save(commit=False)
             rate.user = request.user
@@ -164,7 +165,7 @@ def project(request, post):
         'rating_form': form,
         'rating_status': rating_status
     }
-    return render(request, 'users/article_detail.html', params)
+    return render(request, 'users/article_details.html', params)
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
@@ -172,13 +173,6 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     success_url = reverse_lazy('index')
 
 
-class ArticleDetailView(DetailView):
-    model = Post
-    template_name = 'users/article_details.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)       
-        return context
 
 
 class AddPostView(CreateView):

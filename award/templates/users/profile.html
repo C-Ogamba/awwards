@@ -2,19 +2,18 @@
  {% load static %}
 {% block title %}Profile Page{% endblock title %}
 {% block content %}
-    
-
-
-    <div class="my-3 p-5">
-        <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <img style="border-radius: 60%; border:1px solid #ddd" src="{{ profile.avatar.url }}" alt="">
-            </div>
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <p>{{ profile.bio }}</p>
-                <br/><br/>
-                <button class="btn btn-outline-secondary"><a href="{% url 'update_profile' %}">update profile</a> </button>
-            </div>
+    <div class="cards d-flex justify-content-center">
+    <div class="card-container">
+        <span class="pro">PRO</span>
+        <img class="round" src="{{ profile.avatar.url }}" alt="user" />
+        <h3>{{ profile.user }}</h3>
+        <p>{{ profile.bio }}</p>
+        <div class="buttons">
+        <a class="btn btn-outline-dark" href="{% url 'update_profile' %}">update profile</a>
+            
         </div>
-    </div>
+        <br/><br/>
+</div>
+</div>
+
 {% endblock content %}

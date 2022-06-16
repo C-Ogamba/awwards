@@ -2,14 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from django.urls import reverse
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-import datetime as dt
-
+from cloudinary.models import CloudinaryField
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
+    avatar = CloudinaryField('image')
     bio = models.TextField()
     # projects = models.ManyToOneField()
 
@@ -35,7 +32,7 @@ class Post(models.Model):
     body = models.TextField()
     post_date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=255, default='coding')
-    image = models.ImageField(default='default.jpg', upload_to='images')
+    image = CloudinaryField('image')
     link = models.URLField(max_length=200, null=True)
 
 

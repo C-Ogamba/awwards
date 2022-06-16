@@ -28,7 +28,7 @@
             {% endif %}
             <div class="card-body">
                     <h5 class="card-title">
-                    <a href="{% url 'article-detail' post.pk %}"> {{ post.title }} </a>
+                    <a href="{% url 'article-detail' post.title %}"> {{ post.title }} </a>
                     </h5>
                     <p class="card-text"><a href="{% url 'users-profile' %}">{{ post.author }}</a>: {{ post.body|slice:":200" }}</p>
                         <small>

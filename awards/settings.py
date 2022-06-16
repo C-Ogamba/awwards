@@ -12,6 +12,42 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
+import dj_database_url
+from decouple import config,Csv
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+MODE=config("MODE", default="dev")
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+# development
+if config('MODE')=="dev":
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': config('DB_NAME'),
+           'USER': config('DB_USER'),
+           'PASSWORD': config('DB_PASSWORD'),
+           'HOST': config('DB_HOST'),
+           'PORT': '',
+       }
+       
+   }
+# production
+else:
+   DATABASES = {
+       'default': dj_database_url.config(
+           default=config('DATABASE_URL')
+       )
+   }
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +57,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8t_ay0)4%t9a^ii18#=d%8_prejn@5qf5-6!0l##tvmn#_!66#'
+# SECRET_KEY = 'django-insecure-8t_ay0)4%t9a^ii18#=d%8_prejn@5qf5-6!0l##tvmn#_!66#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -41,12 +77,20 @@ INSTALLED_APPS = [
     'award',
     'social_django',
     'crispy_forms',
+    'cloudinary',
 
     'rest_framework',
 ]
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+cloudinary.config( 
+    cloud_name= config('CLOUD_NAME'), 
+    api_key=config('API_KEY'),
+    api_secret=config('API_SECRET'),
+    
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,16 +137,16 @@ AUTHENTICATION_BACKENDS = (
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'award',
-        'USER': 'moringa',
-        'PASSWORD': 'poiuy',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'award',
+#         'USER': 'moringa',
+#         'PASSWORD': 'poiuy',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -157,8 +201,8 @@ LOGIN_URL = 'login'
 
 
 # social auth configs for github
-SOCIAL_AUTH_GITHUB_KEY = '9215db427d1ebe008781'
-SOCIAL_AUTH_GITHUB_SECRET = '7f5d544c8d6dcff41ac6c8c6a5338676fca5a801'
+GITHUB_KEY = 'YOUR_GITHUB_KEY'
+GITHUB_SECRET = 'YOUR_GITHUB_SECRET_KEY'
 # SOCIAL_AUTH_GITHUB_SCOPE = [...]
 
 
@@ -166,3 +210,6 @@ SOCIAL_AUTH_GITHUB_SECRET = '7f5d544c8d6dcff41ac6c8c6a5338676fca5a801'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configure Django App for Heroku.
+django_heroku.settings(locals())

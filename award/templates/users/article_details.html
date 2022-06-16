@@ -4,16 +4,20 @@
     {{ post.title_tag }}
 {% endblock %}
 {% block content %}
+
     <img class="rounded-circle" src="{{ profile.avatar.url }}" alt="" height="60">
-    <h1>{{ post.title }} </h1>
     {% if post.image %}
     <img class="card-img-top" style="width: 18rem;" src="{{ post.image.url }}" alt="Card image cap">
     {% endif %}
-    <br/>
-    <small>By: 
+    <br/><br/>
+    <h1>{{ post.title|title }} </h1>
+    <p>{{ post.body|safe }}</p>
+    <small> <em> By: 
         {{ post.author.first_name}} 
         {{ post.author.last_name}} - 
         {{ post.post_date }}
+
+    </em></small><br/>
 
         {% if user.is_authenticated %}
         {% if user.id == post.author.id %}
@@ -21,10 +25,8 @@
         <a href="{% url 'delete_post' post.pk %}">Delete</a>
         {% endif %}
         {% endif %}
-    </small><br/>
     <hr>
      <div class="mask rgba-black-slight">
-                    <div class="container">
                         <div class="row">
                             <div class="col-md-3"></div>
                             <div class="col-md-6 d-flex flex-row mx-auto" style="margin-top:20%">
@@ -44,19 +46,18 @@
                             </div>
                             <div class="col-md-3"></div>
                         </div>
-                    </div>
+                    
                 </div>
             </a>
-        </div>
+        
         <div class="card-body">
             <h5 class="card-title"><strong>{{post.title|title}}</strong>
-                <a href="{{ post.url }}" style="float:right" class="btn btn-sm btn-info mr-4"> Visit </a></h5>
-            <p>by <span><a href="{% url 'users-profile' %}" id="usern" class="mr-2">{{ post.user.username|title }}</a></span>({{post.user.profile.location}})
-            </p>
-            <p>{{ post.description }}</p>
+                <a href="{{ post.link }}" style="float:right" class="btn btn-sm btn-info mr-4"> Visit </a></h5>
+
+            <p>{{ post.body }}</p>
             <hr>
             <p class="card-text "><img src="{{ profile.avatar.url }}" class="nav-img mr-2" alt="">
-                By {{post.user.username|title}} <span style="float:right">{{post.date|date}}</span>
+                By {{post.author.username|title}} 
             </p>
             <div class="row">
                 <div class="col-md-2"></div>
@@ -93,14 +94,9 @@
             {% endif %}
             {% endif %}
         </div>
-    </div>
-</div>
 
     <br/>
-    <p>{{ post.body|safe }}</p>
-    
-    <br/><br/>
     <a href="{% url 'index' %}" class="btn btn-secondary">Back</a>
     <hr>
- <br/><br/>
+
  {% endblock %}
