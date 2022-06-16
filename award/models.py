@@ -18,13 +18,6 @@ class Profile(models.Model):
 
         img = CloudinaryField('image')
 
-        if img.height > 100 or img.width > 100:
-            new_img = (100, 100)
-            img.thumbnail(new_img)
-            img.save(self.avatar.path)
-
-
-
 class Post(models.Model):
     title = models.CharField(max_length=255)
     title_tag = models.CharField(max_length=255)
